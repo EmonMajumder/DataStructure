@@ -7,71 +7,146 @@
 #include "Queue.h"
 using namespace std;
 
-int main() {
+int * MazeSize(string file) {
 	int row = 0;
 	int col = 0;
+	int size[2];
 	char currentchar = NULL;
-	/*char **maze;
-	maze = new char *[];
-	maze[0] = new char[];*/
+
 	ifstream myReadFile;
-	//Queue queue;
-	int x = 0;
-	int y = 1;
-	myReadFile.open("C:\\DataStructure\\Maze\\maze.txt");
+	myReadFile.open(file);
+
 	char output;
 	myReadFile.get(output);
+
 	while (!myReadFile.eof()) {
-		cout << output;
 		if (output != '\n')
 		{
-			col++;
-		}		
-		if (currentchar == '\n' && output != currentchar)
-		{
-			row++;
-			col = 0;
+			if (currentchar == '\n')
+			{
+				row++;
+				col = 0;
+			}
+			else
+				col++;
 		}
-		currentchar = output;		
-		myReadFile.get(output);				
+		currentchar = output;
+		myReadFile.get(output);
 	}
 	myReadFile.close();
-	cout << row << "<=>" << col << endl;
+	size[0] = row;
+	size[1] = col;
+	return size;
+}
 
-	//while(x < mazechar2.size()-1)
-	//{
-	//	int direction = 0;
+char **Maze(string file) {
+	int *size = MazeSize("C:\\DataStructure\\Maze\\maze.txt");
+	int row = size[0];
+	int col = size[1]+1;
 
-	//	if (mazechar1.at(y).at(x - 1) == ' ')
-	//	{
-	//		x--;
-	//		direction++;
-	//		mazechar1[y][x] = 'o';
-	//	}
-	//	else if(mazechar1.at(y).at(x + 1) == ' ')
-	//	{
-	//		x++;
-	//		direction++;
-	//	}
-	//	else if (mazechar1.at(y - 1).at(x) == ' ')
-	//	{
-	//		y--;
-	//		direction++;
-	//	}
-	//	else if (mazechar1.at(y + 1).at(x) == ' ')
-	//	{
-	//		y++;
-	//		direction++;
-	//	}
-	//	else
-	//	{
+	char** maze = new char *[row];
 
-	//	}
-	//	if (direction > 0)
-	//	{
-	//		//queue.Push(j, i);
-	//	}
-	//}
+	for (int i = 0; i <= row; i++)
+	{
+		maze[i] = new char[col];
+	}
+
+	int i = 0;
+	int j = 0;
+	ifstream myReadFile;
+	myReadFile.open(file);
+
+	char output;
+
+	myReadFile.get(output);
+
+	while (i <= row) {
+		maze[i][j] = output;
+		if (output == '\n')
+		{
+			i++;
+			j = 0;
+		}
+		else
+		{
+			j++;
+		}
+		myReadFile.get(output);		
+	}
+	myReadFile.close();
+
+	return maze;
+}
+
+int *StartingPoint(char **maze,int row, int col) {
+	for (int i = 0; i <= row; i++) {
+		if (maze[i][0] == ' ')
+		{
+			int startingPoint[] = {i,0};
+			return startingPoint;
+		}
+	}
+	for (int j = 0; j <= col; j++) {
+		if (maze[0][j] == ' ')
+		{
+			int startingPoint[] = { 0,j };
+			return startingPoint;
+		}
+	}
+}
+
+int *EndPoint(char **maze, int row, int col) {
+	for (int i = 0; i <= row; i++) {
+		if (maze[i][col] == ' ')
+		{
+			int endPoint[] = { i,col };
+			return endPoint;
+		}
+	}
+	for (int j = 0; j <= col; j++) {
+		if (maze[row][j] == ' ')
+		{
+			int endPoint[] = { 0,j };
+			return endPoint;
+		}
+	}
+}
+
+
+int main() {
+
+	int *size;
+	size = MazeSize("C:\\DataStructure\\Maze\\maze.txt");
+	int x = size[0];
+	int y = size[1];
+	char **maze = Maze("C:\\DataStructure\\Maze\\maze.txt");
+	
+
+	int *startingPoint;
+	startingPoint = StartingPoint(maze,x,y);
+	//cout << startingPoint[0] << startingPoint[1] << endl;
+	int *endPoint;
+	endPoint = EndPoint(maze, x, y);
+	//cout << endPoint[0] << endPoint[1] << endl;
+
+	int mazerow = startingPoint[0];
+	int mazecol = startingPoint[1];
+
+	while(true)
+	{
+		if (mazerow == endPoint[0] && mazecol == endPoint[1])
+		{
+			break;
+		}
+	}
+
+	for (int i = 0; i <= x; i++)
+	{
+		for (int j = 0; j <= y + 1; j++)
+		{
+			cout << maze[i][j];
+		}
+	}
 
 	//cout << mazechar1.size() << endl;
 
