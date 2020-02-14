@@ -5,6 +5,7 @@ private:
 	int x;
 	int y;
 	StackNode *next;
+
 public:	
 	StackNode();
 	StackNode(int x, int y, StackNode* next);

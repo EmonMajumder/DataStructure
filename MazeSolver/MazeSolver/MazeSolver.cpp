@@ -239,6 +239,7 @@ void CreateMazeSolutionFile(string file, char **maze)
 				outputfile << maze[i][j];
 		}
 	}
+
 	outputfile.close();
 }
 
@@ -270,11 +271,13 @@ int main() {
 
 	Stack stack;
 	string file = "";
+
 	int *size;
 	int height = 0;
 	int width = 0;
 	int dir = 1;
 	char **maze;
+
 	int endPointX = 0;
 	int endPointY = 0;
 	int startingPointX = 0;
@@ -296,6 +299,7 @@ int main() {
 
 		endPointX = EndPointX(maze, height, width);
 		endPointY = EndPointY(maze, height, width);
+
 		startingPointX = StartingPointX(maze, height, width);
 		startingPointY = StartingPointY(maze, height, width);
 
