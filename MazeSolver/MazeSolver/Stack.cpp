@@ -1,6 +1,6 @@
 #include "pch.h"
 #include <iostream>
-#include "stacknode.h"
+#include "StackNode.h"
 #include "Stack.h"
 using namespace std;
 
@@ -34,17 +34,4 @@ void Stack::Pop()
 		top = top->getNext();
 		delete nodePtr;
 	}
-}
-
-ostream& operator<<(ostream& output, Stack& stack)
-{
-	StackNode *node = stack.getTop();
-
-	while (node != NULL)
-	{
-		cout << node->getX() << endl;
-		node = node->getNext();
-	}
-
-	return output;
 }

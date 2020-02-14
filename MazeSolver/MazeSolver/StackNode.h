@@ -3,9 +3,9 @@ class StackNode
 {
 private:
 	int x;
-	int y;	
-public:
+	int y;
 	StackNode *next;
+public:	
 	StackNode();
 	StackNode(int x, int y, StackNode* next);
 	virtual ~StackNode();

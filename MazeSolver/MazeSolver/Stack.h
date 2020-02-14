@@ -1,5 +1,5 @@
 #pragma once
-#include "stacknode.h"
+#include "StackNode.h"
 using namespace std;
 
 class Stack
@@ -13,6 +13,5 @@ public:
 	void Pop();
 	StackNode *getTop();
 	virtual  ~Stack();
-	friend ostream& operator<<(ostream& output, Stack& stack);
 };
 

@@ -1,6 +1,5 @@
 // MazeSolver.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
 #include "pch.h"
 #include <iostream>
 #include <fstream>
@@ -10,14 +9,15 @@
 #include "Stack.h"
 using namespace std;
 
-int * MazeSize(string file) {
+//Function to determine maze size.
+int * MazeSize(string *file) {
 	int row = 0;
 	int col = 0;
 	int size[2];
 	char currentchar = NULL;
 
 	ifstream myReadFile;
-	myReadFile.open(file);
+	myReadFile.open(*file);
 
 	char output;
 	myReadFile.get(output);
@@ -43,7 +43,8 @@ int * MazeSize(string file) {
 	return size;
 }
 
-char **Maze(string file) {
+//Function to reate a 2D array from the input maze txt file.
+char **Maze(string *file) {
 
 	int *size = MazeSize(file);
 
@@ -60,7 +61,7 @@ char **Maze(string file) {
 	int i = 0;
 	int j = 0;
 	ifstream myReadFile;
-	myReadFile.open(file);
+	myReadFile.open(*file);
 
 	char output;
 
@@ -84,6 +85,7 @@ char **Maze(string file) {
 	return maze;
 }
 
+//Function to find the starting position row number.
 int StartingPointX(char **maze, int row, int col) {
 	for (int i = 0; i <= row; i++) {
 		if (maze[i][0] == ' ')
@@ -99,6 +101,8 @@ int StartingPointX(char **maze, int row, int col) {
 	}
 }
 
+
+//Function to find the starting position column number.
 int StartingPointY(char **maze, int row, int col) {
 	for (int i = 0; i <= row; i++) {
 		if (maze[i][0] == ' ')
@@ -114,6 +118,7 @@ int StartingPointY(char **maze, int row, int col) {
 	}
 }
 
+//Function to find the end position row number.
 int EndPointX(char **maze, int row, int col) {
 	for (int i = 0; i <= row; i++) {
 		if (maze[i][col] == ' ')
@@ -129,6 +134,7 @@ int EndPointX(char **maze, int row, int col) {
 	}
 }
 
+//Function to find the end position column number.
 int EndPointY(char **maze, int row, int col) {
 	for (int i = 0; i <= row; i++) {
 		if (maze[i][col] == ' ')
@@ -144,6 +150,7 @@ int EndPointY(char **maze, int row, int col) {
 	}
 }
 
+//Take input and Validate filename from user.
 string ValidateInputFilename()
 {
 	string file;
@@ -208,6 +215,56 @@ string ValidateInputFilename()
 	return file;
 }
 
+//Create new txt file for maze solution.
+void CreateMazeSolutionFile(string file, char **maze)
+{
+	int *size = MazeSize(&file);
+	int height = size[0];
+	int width = size[1];
+
+	file.erase(file.begin() + (file.length() - 4), file.end());
+	file += "_solution.txt";
+	ofstream outputfile;
+	outputfile.open(file);
+
+	for (int i = 0; i <= height; i++)
+	{
+		for (int j = 0; j <= (width + 1); j++)
+		{
+			if (maze[i][j] == '*')
+			{
+				outputfile << ' ';
+			}
+			else
+				outputfile << maze[i][j];
+		}
+	}
+	outputfile.close();
+}
+
+//Display the solved maze.
+void DisplayMazeSolution(string *file, char **maze)
+{
+	int *size = MazeSize(file);
+	int height = size[0];
+	int width = size[1];
+
+	for (int i = 0; i <= height; i++)
+	{
+		for (int j = 0; j <= (width + 1); j++)
+		{
+			if (maze[i][j] == '*')
+			{
+				cout << ' ';
+			}
+			else
+				cout << maze[i][j];
+		}
+	}
+}
+
+
+
 
 int main() {
 
@@ -232,10 +289,10 @@ int main() {
 			break;
 		}
 
-		size = MazeSize(file);
+		size = MazeSize(&file);
 		height = size[0];
 		width = size[1];
-		maze = Maze(file);
+		maze = Maze(&file);
 
 		endPointX = EndPointX(maze, height, width);
 		endPointY = EndPointY(maze, height, width);
@@ -249,6 +306,7 @@ int main() {
 
 		while (true)
 		{
+			//To randomize the maze path finding preference.
 			int random = rand() % 100 + 1;
 			if (random % 2 == 0)
 			{
@@ -259,24 +317,28 @@ int main() {
 				dir = 1;
 			}
 
+			//Check up or down for path.
 			if (maze[currentPosition[0] - dir][currentPosition[1]] == ' ')
 			{
 				currentPosition[0] = currentPosition[0] - dir;
 				maze[currentPosition[0]][currentPosition[1]] = '#';
 				stack.Push(currentPosition[0], currentPosition[1]);
 			}
+			//Check left or right for path.
 			else if (maze[currentPosition[0]][currentPosition[1] + dir] == ' ')
 			{
 				currentPosition[1] = currentPosition[1] + dir;
 				maze[currentPosition[0]][currentPosition[1]] = '#';
 				stack.Push(currentPosition[0], currentPosition[1]);
 			}
+			//Check up or down for path.
 			else if (maze[currentPosition[0] + dir][currentPosition[1]] == ' ')
 			{
 				currentPosition[0] = currentPosition[0] + dir;
 				maze[currentPosition[0]][currentPosition[1]] = '#';
 				stack.Push(currentPosition[0], currentPosition[1]);
 			}
+			//Check left or right for path.
 			else if (maze[currentPosition[0]][currentPosition[1] - dir] == ' ')
 			{
 				currentPosition[1] = currentPosition[1] - dir;
@@ -293,21 +355,11 @@ int main() {
 
 			if (currentPosition[0] == endPointX && currentPosition[1] == endPointY)
 			{
-				for (int i = 0; i <= height; i++)
-				{
-					for (int j = 0; j <= (width + 1); j++)
-					{
-						if (maze[i][j] == '*')
-						{
-							cout << ' ';
-						}
-						else
-							cout << maze[i][j];
-					}
-				}
+				CreateMazeSolutionFile(file, maze);
+				DisplayMazeSolution(&file, maze);
 				break;
 			}
 		}
 	}
-	return 0;
+	exit(0);
 }
