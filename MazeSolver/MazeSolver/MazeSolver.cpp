@@ -10,7 +10,7 @@
 using namespace std;
 
 //Function to determine maze size.
-int * MazeSize(string *file) {
+int *MazeSize(string *file) {
 	int row = 0;
 	int col = 0;
 	int size[2];
@@ -172,6 +172,7 @@ string ValidateInputFilename()
 		{
 			return filename;
 		}
+
 		else
 		{
 			//Regex comparism
@@ -365,5 +366,5 @@ int main() {
 			}
 		}
 	}
-	exit(0);
+	return 0;
 }
