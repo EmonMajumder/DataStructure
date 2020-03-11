@@ -6,6 +6,7 @@
 #include <chrono>
 #include <ctime>
 #include <string>
+#include <fstream>
 #include "sortObj.h"
 
 using namespace std;
@@ -322,4 +323,30 @@ int getArraysize()
 	}
 
 	return arraysize;
+}
+
+void writesortedArray(string file, string writeornot, int a[], int arraysize)
+{
+	if (writeornot == "y" || writeornot == "Y")
+	{
+		ofstream outputfile;
+		outputfile.open(file);
+
+		for (int i = 0; i < arraysize; i++)
+		{
+			outputfile << a[i];
+
+			if (i != arraysize - 1)
+			{
+				outputfile << ", ";
+			}
+
+			if (i % 20 == 0 && i > 0)
+			{
+				outputfile << "\n";
+			}
+		}
+
+		outputfile.close();
+	}
 }

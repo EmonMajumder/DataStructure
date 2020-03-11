@@ -14,15 +14,20 @@ using namespace std;
 int main()
 {
 	int arraysize= getArraysize();
+	string writeornot;
 
 	sortObj sortobj(arraysize);
 	sortobj.fillArray();
+	
+	cout << "Do you want to write output to a file? (Y/N) : ";
+	getline(cin, writeornot);
 
 	//sortobj.showarray(sortobj.a, "Unsorted Array");
 	sortobj.copyarray();
 	auto t1 = chrono::high_resolution_clock::now();
 	sortobj.bubbleSort();
 	auto t2 = chrono::high_resolution_clock::now();
+	writesortedArray("BubbleSort.txt", writeornot, sortobj.copya, sortobj.arraysize);
 	//sortobj.showarray(sortobj.copya, "Sorted Array");
 	cout << "Bubble Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds." << endl;
 
@@ -32,6 +37,7 @@ int main()
 	sortobj.selectionSort();
 	t2 = chrono::high_resolution_clock::now();
 	//sortobj.showarray(sortobj.copya, "Sorted Array");
+	writesortedArray("SelectionSort.txt", writeornot, sortobj.copya, sortobj.arraysize);
 	cout << "Selection Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds." << endl;
 
 	//sortobj.showarray(sortobj.a, "Unsorted Array");
@@ -40,6 +46,7 @@ int main()
 	sortobj.insertionSort();
 	t2 = chrono::high_resolution_clock::now();
 	//sortobj.showarray(sortobj.copya, "Sorted Array");
+	writesortedArray("InsertionSort.txt", writeornot, sortobj.copya, sortobj.arraysize);
 	cout << "Insertion Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds." << endl;
 
 	//sortobj.showarray(sortobj.a, "Unsorted Array");
@@ -48,6 +55,7 @@ int main()
 	sortobj.shellSort();
 	t2 = chrono::high_resolution_clock::now();
 	//sortobj.showarray(sortobj.copya, "Sorted Array");
+	writesortedArray("ShellSort.txt", writeornot, sortobj.copya, sortobj.arraysize);
 	cout << "Shell Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds." << endl;
 
 	//sortobj.showarray(sortobj.a, "Unsorted Array");
@@ -57,6 +65,7 @@ int main()
 	sortobj.mergeSort(sortobj.copya, 0, arraysize-1, b);
 	t2 = chrono::high_resolution_clock::now();
 	//sortobj.showarray(sortobj.copya, "Sorted Array");
+	writesortedArray("MergeSort.txt", writeornot, sortobj.copya, sortobj.arraysize);
 	cout << "Merge Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds." << endl;
 	delete[] b;
 
@@ -66,6 +75,7 @@ int main()
 	sortobj.quickSort(sortobj.copya, 0, arraysize - 1);
 	t2 = chrono::high_resolution_clock::now();
 	//sortobj.showarray(sortobj.copya, "Sorted Array");
+	writesortedArray("QuickSort.txt", writeornot, sortobj.copya, sortobj.arraysize);
 	cout << "Quick Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds." << endl;
 
 	//sortobj.showarray(sortobj.a, "Unsorted Array");
@@ -75,6 +85,7 @@ int main()
 	sortobj.radixSort(sortobj.copya, arraysize, b);
 	t2 = chrono::high_resolution_clock::now();
 	//sortobj.showarray(sortobj.copya, "Sorted Array");
+	writesortedArray("RadixSort.txt", writeornot, sortobj.copya, sortobj.arraysize);
 	cout << "Radix Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds." << endl;
 }
 

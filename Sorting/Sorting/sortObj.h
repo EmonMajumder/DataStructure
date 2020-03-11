@@ -27,4 +27,5 @@ public:
 };
 
 int getArraysize();
+void writesortedArray(string file, string writeornot, int a[], int arraysize);
 
