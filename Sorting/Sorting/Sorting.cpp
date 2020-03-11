@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <chrono>
 #include <ctime>
 
 using namespace std;
@@ -150,75 +151,112 @@ void quickSort(int a[], int left, int right)
 	}
 }
 
-
-void merge(int arr[], int l, int m, int r)
+void merge(int a[], int first, int middle, int last, int tempArray[])
 {
-	int i, j, k;
-	int n1 = m-l+1;
-	int n2 = r - m;
+	int i = first, j = middle+1, k=0;
 
-	/* create temp arrays */
-	int *L = new int[n1];
-	int *R = new int[n2];
-
-	/* Copy data to temp arrays L[] and R[] */
-	for (i = 0; i < n1; i++)
-		L[i] = arr[l + i];
-	for (j = 0; j < n2; j++)
-		R[j] = arr[m + 1 + j];
-
-	/* Merge the temp arrays back into arr[l..r]*/
-	i = 0; // Initial index of first subarray 
-	j = 0; // Initial index of second subarray 
-	k = l; // Initial index of merged subarray 
-	while (i < n1 && j < n2)
+	while (i <= middle && j <= last)
 	{
-		if (L[i] <= R[j])
+		if (a[i] <= a[j])
 		{
-			arr[k] = L[i];
+			tempArray[k] = a[i];
 			i++;
 		}
 		else
 		{
-			arr[k] = R[j];
+			tempArray[k] = a[j];
 			j++;
 		}
 		k++;
 	}
 
-	/* Copy the remaining elements of L[], if there
-	   are any */
-	while (i < n1)
+	while (i <= middle)
 	{
-		arr[k] = L[i];
+		tempArray[k] = a[i];
 		i++;
 		k++;
 	}
 
-	/* Copy the remaining elements of R[], if there
-	   are any */
-	while (j < n2)
+	while (j <= last)
 	{
-		arr[k] = R[j];
+		tempArray[k] = a[j];
 		j++;
 		k++;
 	}
+
+	for (i = 0; i <= last - first; i++)
+		a[first + i] = tempArray[i];
 }
 
-void mergeSort(int a[], int l, int r)
-{
-	if (l<r)
-	{
-		int m = l+(r - l) / 2;
-		mergeSort(a, l, m);
-		mergeSort(a, m+1, r);
-		merge(a, l, m, r);
+void mergeSort(int a[], int first, int last, int tempArray[]) 
+{ 
+	if (first<last)
+	{ 
+		int middle = (first + last) / 2;
+		mergeSort(a, first, middle, tempArray);
+		mergeSort(a, middle+1, last, tempArray);
+		merge(a, first, middle, last, tempArray); 
 	}
+}
+
+// A utility function to get maximum value in arr[] 
+int getMax(int a[], int n)
+{
+	int mx = a[0];
+	for (int i = 1; i < n; i++)
+	{
+		if (a[i] > mx)
+			mx = a[i];
+	}		
+	return mx;
+}
+
+// A function to do counting sort of arr[] according to 
+// the digit represented by exp. 
+void countSort(int a[], int n, int exp, int temp[])
+{
+	int i, count[10] = {0};
+
+	// Store count of occurrences in count[] 
+	for (i = 0; i < n; i++)
+	{
+		count[(a[i] / exp) % 10]++;
+	}		
+
+	// Change count[i] so that count[i] now contains actual 
+	//  position of this digit in output[] 
+	for (i = 1; i < 10; i++)
+		count[i] += count[i - 1];
+
+	// Build the output array 
+	for (i = n - 1; i >= 0; i--)
+	{
+		temp[count[(a[i] / exp) % 10] - 1] = a[i];
+		count[(a[i] / exp) % 10]--;
+	}
+
+	// Copy the output array to arr[], so that arr[] now 
+	// contains sorted numbers according to current digit 
+	for (i = 0; i < n; i++)
+		a[i] = temp[i];
+}
+
+// The main function to that sorts arr[] of size n using  
+// Radix Sort 
+void radixSort(int a[], int n, int temp[])
+{
+	// Find the maximum number to know number of digits 
+	int m = getMax(a, n), exp;
+
+	// Do counting sort for every digit. Note that instead 
+	// of passing digit number, exp is passed. exp is 10^i 
+	// where i is current digit number 
+	for (exp = 1; m / exp > 0; exp *= 10)
+		countSort(a, n, exp, temp);
 }
 
 int main()
 {
-	double t1, t2;
 	srand((unsigned)time(0));
 
 	int randomNumber = 0;
@@ -232,51 +270,61 @@ int main()
 	
 	/*copyarray(a);
 	showarray(copya, arraysize);	
-	t1 = clock();
+	auto t1 = chrono::high_resolution_clock::now();
 	bubbleSort(copya, arraysize);
-	t2 = clock();
+	auto t2 = chrono::high_resolution_clock::now();
 	showarray(copya, arraysize);
 	cout << "Bubble Sort\t: " << (t2 - t1) / CLK_TCK << " sec\n";*/
 
 	/*copyarray(a);
 	showarray(copya, arraysize);
-	t1 = clock();
+	auto t1 = chrono::high_resolution_clock::now();
 	insertionSort(copya, arraysize);
-	t2 = clock();
+	auto t2 = chrono::high_resolution_clock::now();
 	showarray(copya, arraysize);
 	cout << "Insertion Sort\t: " << (t2 - t1) / CLK_TCK << " sec\n";*/
 
 	/*copyarray(a);
 	showarray(copya, arraysize);
-	t1 = clock();
+	auto t1 = chrono::high_resolution_clock::now();
 	quickSort(copya, 0, arraysize-1);
-	t2 = clock();
+	auto t2 = chrono::high_resolution_clock::now();
 	showarray(copya, arraysize);
 	cout << "Quick Sort\t: " << (t2 - t1) / CLK_TCK << " sec\n";*/
 
 	/*copyarray(a);
 	showarray(copya, arraysize);
-	t1 = clock();
+	auto t1 = chrono::high_resolution_clock::now();
 	selectionSort(copya, arraysize);
-	t2 = clock();
+	auto t2 = chrono::high_resolution_clock::now();
 	showarray(copya, arraysize);
 	cout << "Selection Sort\t: " << (t2 - t1) / CLK_TCK << " sec\n";*/
 
 	//copyarray(a);
 	//showarray(copya, arraysize);
-	//t1 = clock();
+	//auto t1 = chrono::high_resolution_clock::now();
 	//shellSort(copya, arraysize);
-	//t2 = clock();
+	//auto t2 = chrono::high_resolution_clock::now();
 	//showarray(copya, arraysize);
 	//cout << "Shell Sort\t: " << (t2 - t1) / CLK_TCK << " sec\n";
 
+	/*copyarray(a);
+	showarray(copya, arraysize);
+	int b[arraysize];
+	auto t1 = chrono::high_resolution_clock::now();
+	mergeSort(copya, 0, arraysize-1, b);
+	auto t2 = chrono::high_resolution_clock::now();
+	showarray(copya, arraysize);
+	cout << "Merge Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds.";*/
+
 	copyarray(a);
 	showarray(copya, arraysize);
-	t1 = clock();
-	mergeSort(copya, 0, arraysize-1);
-	t2 = clock();
+	int b[arraysize];
+	auto t1 = chrono::high_resolution_clock::now();
+	radixSort(copya, arraysize, b);
+	auto t2 = chrono::high_resolution_clock::now();
 	showarray(copya, arraysize);
-	cout << "Merge Sort\t: " << (t2 - t1) / CLK_TCK << " sec\n";
+	cout << "Merge Sort\t: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " milliseconds.";
 	
 }
 
